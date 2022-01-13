@@ -1,0 +1,30 @@
+\documentclass[paper=a4,oneside,fontsize=12,parskip=full,titlepage=firstiscover,toc=sectionentrywithdots]{scrartcl}
+
+\usepackage{biblatex}
+\usepackage{listings}
+\usepackage{inconsolata}
+
+\lstset{
+    basicstyle = \ttfamily\small
+}
+
+\addbibresource{references.bib}
+
+\begin{document}
+    \titlehead{Atılım University\\Department of Computer Engineering}
+    \title{Translation from XSD to JSON Schema}
+    \subtitle{A short introductory report on conversion of two popular data interchange formats.}
+    \author{Tuğçe Kaman\thanks{M.Sc. candidate in Computer Engineering.} \and Tolga Üstünkök\thanks{Ph.D. candidate in Software Engineering.}}
+    \date{January 12, 2022}
+    \publishers{CMPE541 - Advanced Databases\thanks{Authors thank to Dr. Damla TOPALLI for her great support and contributions.}}
+    \maketitle
+    \tableofcontents\newpage
+
+    \input{sections/introduction.tex}
+    \input{sections/methods.tex}
+    \input{sections/results.tex}
+    \input{sections/conclusions.tex}
+
+    \printbibliography[heading=bibintoc]
+
+\end{document}

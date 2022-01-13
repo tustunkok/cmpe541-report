@@ -1,0 +1,134 @@
+\section{Introduction}
+Today, almost every web application is working asynchronously. While a
+long-running user task is running in the background, the web application shows a
+waiting animation to the user. Asynchronous web applications immensely increase
+user satisfaction and provide informative feedback to the user.
+
+Getting the necessary information to start a background task and informing the
+user that the background process finished its job is made possible by sending
+and receiving messages between server and client. These messages should have
+well-defined structures and standards. They should also structure the
+transmitted data and store it when necessary. These messages can be plain text
+as well as proprietary binary data. Both have their advantages and
+disadvantages. Employing plain text messages over HTTP has its advantages
+against using binary data. Because of that, text-based markup languages are
+developed and have quickly become popular. Two of the most famous ones are
+Extensible Markup Language (XML) and JavaScript Object Notation (JSON). Since
+these languages have similar/interchangeable tasks, converting one to another
+can be very useful in some contexts.
+
+\subsection{Motivation}
+XML Schema Definition (XSD) is a very stable and widespread set of elements to
+be used with XML to transfer data back and forth across the server and host. W3C
+published its recommendation of XSD in 2001. Since then, it has been maintained
+and protected by various standards.
+
+The history of JSON Schema is quite similar to the one of XSD, with one key
+difference. The syntax of JSON is immensely influenced by the JavaScript
+dictionary notation. This property is very web developer-friendly since they are
+often familiar with JavaScript. In addition, JSON was developed mainly
+considering web technologies such as HTTP, Flash, and JavaScript.
+
+All of these notches suggest some sort of conversion should be made possible
+from XSD to JSON. However, the literature has little research on the topic.
+Therefore, a summary of the existing studies can be advantageous to have for
+developing further research ideas. Besides, due to the popularity of XSD, some
+JSON suitable data have already been stored in XSD rather than JSON. The
+conversion of this type of data can be beneficial. Also, transmitting messages
+with JSON is much more optimized in some modern environments.
+
+\subsection{Preliminaries}
+In general, a schema describes the characteristics of an object and its
+relations with other objects. A schema defines elements and attributes of
+elements to represent an object such as a web page. Examples of such a schema
+can be HTML, XML. A schema does not have to be a document. It can be a byte
+stream or a database record. In this report, a schema is always interpreted as a
+document.
+
+To understand the actual need for conversion, one should understand the
+underlying formats. In this section, a summary of both XSD and JSON Schema is
+presented. The explanations for each format are also supported with brief
+examples.
+
+\subsubsection{XML Schema Definition}
+Fallside et al. \autocite{Fallside} start giving an example XML document (but
+not a schema yet) on a home products ordering and billing application in their
+primer work on XML Schema. Their example document can be seen in Listing \ref{lst:xml-doc}.
+
+\begin{lstlisting}[language = XML, caption = {An XML document for a home products ordering and billing application.}, captionpos = b, label = lst:xml-doc]
+    <?xml version="1.0"?>
+    <purchaseOrder orderDate="1999-10-20">
+    <shipTo country="US">
+        <name>Alice Smith</name>
+        <street>123 Maple Street</street>
+        <city>Mill Valley</city>
+        <state>CA</state>
+        <zip>90952</zip>
+    </shipTo>
+    <billTo country="US">
+        <name>Robert Smith</name>
+        <street>8 Oak Avenue</street>
+        <city>Old Town</city>
+        <state>PA</state>
+        <zip>95819</zip>
+    </billTo>
+    <comment>Hurry, my lawn is going wild<!/comment>
+    <items>
+        <item partNum="872-AA">
+            <productName>Lawnmower</productName>
+            <quantity>1</quantity>
+            <USPrice>148.95</USPrice>
+            <comment>Confirm this is electric</comment>
+        </item>
+        <item partNum="926-AA">
+            <productName>Baby Monitor</productName>
+            <quantity>1</quantity>
+            <USPrice>39.98</USPrice>
+            <shipDate>1999-05-21</shipDate>
+        </item>
+    </items>
+    </purchaseOrder>
+\end{lstlisting}
+
+Listing 1 starts with a version identification, continues with several
+subelements (elements that contain other elements) that are spanned by a
+top-level element called "purchaseOrder". Each element has its closing tag if
+they are not one-liners. Elements that carry subelements or attributes are
+called complex types. Other elements that only have numbers, strings, dates,
+etc. are called simple types.
+
+An XML document is said to be an XML schema when its elements and subelements
+have "xsd" namespace associated with them. A partial example from Fallside et
+al. is given in Listing \ref{lst:xml-sch}.
+
+\begin{lstlisting}[language = XML, caption = {A partial XML schema for a home products ordering and billing application.}, captionpos = b, label = lst:xml-sch]
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        Purchase order schema for Example.com.
+        Copyright 2000 Example.com. All rights reserved.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="purchaseOrder" type="PurchaseOrderType"/>
+
+    <xsd:element name="comment" type="xsd:string"/>
+
+    <xsd:complexType name="PurchaseOrderType">
+        <xsd:sequence>
+        <xsd:element name="shipTo" type="USAddress"/>
+        <xsd:element name="billTo" type="USAddress"/>
+        <xsd:element ref="comment" minOccurs="0"/>
+        <xsd:element name="items"  type="Items"/>
+        </xsd:sequence>
+        <xsd:attribute name="orderDate" type="xsd:date"/>
+    </xsd:complexType>
+
+    ...
+
+    </xsd:schema>
+
+\end{lstlisting}
+
+\subsubsection{JSON Schema Definition}
