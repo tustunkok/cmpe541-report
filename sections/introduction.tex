@@ -138,3 +138,29 @@ the originating library for a namespace can be the same, the name of the
 namespace should also be consistent throughout different schemas.
 
 \subsubsection{JSON Schema Definition}
+JSON is the most popular data exchange format to communicate with an API
+\autocite{Pezoa2016}. However, it lacks a standard to permit its users to be
+consistent throughout multiple projects. JSON Schema \autocite{JSONSchema} is
+such an effort. Validators of JSON Schema cannot agree upon the syntax other
+than the most general parts since JSON Schema is still a work in progress.
+
+\begin{lstlisting}[caption = {A JSON Schema that describes an API call structure to validate the integrity of a request.}, captionpos = b, label = lst:json-sch]
+    {
+        "type": "object",
+        "properties": {
+        "Country": {"type": "string"},
+        "City": {"type": "string"},
+        },
+        "required": ["Country", "City"]
+        "additionalProperties": false,
+    }
+\end{lstlisting}
+
+One job of JSON Schema is to provide a framework to validate the compliance of
+requests and responses with the API. For example, the JSON Schema shown in
+Listing \ref{lst:json-sch} describes an API call to a weather application.
+
+This schema informs the validator to accept a JSON document of an object type.
+That is, it must consist of key-value pairs. There must be keys \emph{Country}
+and \emph{City} which must be strings and they are required. There cannot be any
+more keys.
