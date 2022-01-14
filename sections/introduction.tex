@@ -90,7 +90,7 @@ primer work on XML Schema. Their example document can be seen in Listing \ref{ls
     </purchaseOrder>
 \end{lstlisting}
 
-Listing 1 starts with a version identification, continues with several
+Listing 1 starts with a version identification and continues with several
 subelements (elements that contain other elements) that are spanned by a
 top-level element called "purchaseOrder". Each element has its closing tag if
 they are not one-liners. Elements that carry subelements or attributes are
@@ -130,5 +130,11 @@ al. is given in Listing \ref{lst:xml-sch}.
     </xsd:schema>
 
 \end{lstlisting}
+
+The "xsd" namespace is not a special name and can be anything. However, to
+prevent each author has their own namespaces "xsd" is used by convention. It
+also describes the same type in different schemas, like "xsd:string". Although
+the originating library for a namespace can be the same, the name of the
+namespace should also be consistent throughout different schemas.
 
 \subsubsection{JSON Schema Definition}

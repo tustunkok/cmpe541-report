@@ -1,5 +1,133 @@
 \section{Methods}
 \subsection{A Generic Translation Process From XSD to JSON Schema}
+JSON is becoming more and more popular as a data interchange format, but not as
+common as XML, which has recently risen in web service applications. However,
+converting the XML data type directly to the JSON data type results in a format
+error in the original data. One can make the XML-to-JSON conversion error-free
+by converting the XML Schema Definition (XSD) to the appropriate JSON Schema.
+According to the study of Guo et. al. \autocite{Guo2017}, XSD is deployed to
+create a dictionary that converts each XSD node to its corresponding JSON Schema
+format. It is found that this method produces good translation results in most
+cases.
+
+According to the study, there are several semantic principles must be followed
+to transform an XSD snippet into the corresponding JSON Schema. First, a list of
+data values is provided. Secondly, the form can only have a maximum of 5 values.
+Lastly, each value is an integer that is not negative. Furthermore, a genuine
+XML document requires a root element, and this element cannot be used to build
+one. A basic and acceptable JSON Schema can be created based on these
+assumptions. For the translation process, the procedures are followed as: For
+each XSD node, a translation dictionary is created to its matching JSON Schema.
+When traversing the XSD tree, the node's id and attribute are initially saved
+until there are no more child nodes. Then, using the dictionary, the node is
+translated from bottom to top. The data pieces now can be traversed into the
+appropriate JSON Schema format. Recursion can be used to explore some XSD
+elements with child nodes. In the process of navigating, there are three points
+to which need attention: first, each node is given a unique identity (ID), and
+its namespace and tag name are saved; second each XSD attribute's keyword names,
+values, related collections, and default inheritance attributes are recognized;
+third, identifying the element, store its parent node element, and identifying
+the textual information if the child element of an element is a simple text and
+there is no nested XML node. The element node can be transformed into its
+equivalent JSON data type if it has an XSD namespace and is a basic XSD data
+type. There are several specified data types in XML Schema. Although JSON has a
+restricted amount of data types, XSD can be used to confine these data types to
+these limitations. The XSD-to-JSON Schema type-conversion data dictionary is
+created by giving an equivalent JSON Schema for all declared XML data types. The
+complete translation process is traversed from the XSD node's root node to the
+smallest segment (child node), and the child node is then translated. As a
+result, the parent node gets translated, and the entire XSD document is finally
+converted to JSON Schema format.
+
+Overall, by traversing the XSD document node and defining the data attribute
+dictionary for XSD to JSON Schema conversion, the technique may transform XSD
+format data into JSON Schema. Because JSON Schema provides fewer data
+characteristics, it's difficult to implement all the data dictionary's
+conversion rules, making it impossible to convert all XSD parts.
+
 \subsection{Existing Methods}
 \subsubsection{From XML Schema to JSON Schema: Translation with CHR}
+Again, since it seems impossible to convert JSON and XML formats to each other
+without error, even though, Schema languages exist to specify the structure of
+sample documents for both data formats, Nogatz et. al. \autocite{Nogatz2014}
+introduce an application of a language translator. It uses Prolog and Constraint
+Handling Rules (CHR) to transform an XML Schema into a JSON Schema document.
+Simply, an XML Schema document is spread out into CHR constraints, which makes
+it possible to specify translation rules declaratively.
+
+Nogatz identifies CHR as a declarative programming language that follows the
+constraint-based programming paradigm as an extension of the host language. One
+can define CHR rules to manipulate entries in a constraint store. That is,
+depending on the currently saved constraint, you can remove some or add a new
+constraint. Basically, the CHR extension adds three types of rules to the
+logical programming construct to control the contents of the constraint store.
+These CHR program rules are well known in the mathematical logic of computer
+programming. In addition to simplification and propagation rules, there is a
+mixed type called \emph{simpagation}. 
+
+The translation process represented in the study has several steps. The first
+step is reading the XML Schema into Prolog, the output is a nested Prolog term.
+Then, the related constraints will be propagated by traversing the nested Prolog
+term recursively. Their unique identities and references to parent and child
+nodes keep their places. After that, the defaults should be added since the
+Prolog’s XML parser will read explicitly set attributes only. With a CHR
+simpagation rule, some settings are also done, too. Then, the translation step
+comes. By following the constraints propagated referred in the study,
+translation from XSD fragments to JSON Schema is done. All have the same form. A
+single JSON constraint is conveyed that holds the XSD fragment's JSON Schema;
+the guard guarantees that all node and node attribute constraints are of the XML
+Schema namespace. There may be numerous JSON constraints with the same
+identifier since some node restrictions apply to multiple CHR rules. A
+simpagation rule merges them with the assistance of a self-defined merge JSON
+Prolog predicate. The last two steps include wrapping up the JSON Schema and
+cleaning. When the root element of the provided XSD has been translated and its
+JSON constraints have been combined, the previous phase ends. In addition, the
+globally declared type definitions are merged into the root's JSON constraint's
+definitions object. Finally, the constructed JSON Schema object is cleaned up.
+
+Overall, the study proposes a language translator was developed to translate an
+XML Schema to a JSON Schema equivalent. Because the module was built from the
+bottom-up approach, it has a test framework and several test cases. It may not
+be feasible to implement all restricting semantics due to the unavailability of
+specific capabilities in JSON Schema. Another functionality that is lacking is
+the ability to handle linked XSD documents.
+
 \subsubsection{Towards Efficient and Unified XML/JSON Conversion}
+As we have already said, for data representation and/or exchange XML and JSON
+are the two most widely used formats When switching from one format to another
+for data representation, available converters can be used. Šandrih et. al.
+\autocite{Sandrih2017} describes a structure that converts XML and JSON formats
+to each other, which is compared to an existing and publicly available
+converter. Some differences and difficulties are found in the conversion when
+using different converters. Some results of the comparison are presented.
+
+JavaScript is used to create the converter. Building a JavaScript object and
+deserializing it are the first two steps to converting from XML to JSON for data
+representation. The types of the child nodes of the input XML DOM tree of the
+document are inspected during the process of building JavaScript objects, which
+includes the types of elements, text, and CDATA sections. If a node is an
+element, its attributes are initially gathered as fields of the JavaScript
+object that corresponds to it. After that, the offspring of this element's
+simple fixture is checked. Objects are constructed in somewhat various ways
+depending on the quantity of text content and CDATA sections. If an element is
+not a leaf, the same function is run recursively for the subtree with this child
+element as the root. Instead of using a built-in function, the deserialization
+step is done with a custom function. Steps in the conversion of input JSON to
+the appropriate XML representation are converter independent. To parse a generic
+JSON string: First, the open tag () is written first, followed by the
+attributes-values pairs; if this element has children, the close tag (>) is
+inserted next, and the function is performed recursively using the children
+elements as arguments. The text and CDATA parts are left alone. The parent
+element's tag closes after a recursive call. If an element has no children, it
+is closed immediately (/>).
+
+Also, two converters are compared in this study.  In several cases, it is
+discovered that both converters suggest different conversions. These two options
+are available, based on personal preferences and logic. The following are some
+possible options: If CDATA sections are present in data and the content of these
+sections is relevant, one converter may be a better option. With one converter,
+data loss is conceivable. Similarly, with one converter, time climbs rapidly for
+huge files. Invertibility might be an essential criterion as well. A solution is
+offered in this study that would result in preserving most of the information.
+It is managed to save the content, but in some cases, the order could not be
+restored, which is left as future work.
